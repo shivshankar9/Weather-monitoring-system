@@ -26,13 +26,14 @@ This project is a real-time weather monitoring system that processes data from t
 
 ## Install dependencies:
 Run the following command to install all the required dependencies:
-
+```bash
 npm install
+
 ## Set up environment variables:
 
 Create a .env file in the root directory and add the following content:
 
-
+```bash
 OPENWEATHER_API_KEY=your_openweather_api_key
 ALERT_EMAIL=your_email@example.com
 SMTP_HOST=your_smtp_host

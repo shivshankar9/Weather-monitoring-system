@@ -4,7 +4,7 @@ This project is a real-time weather monitoring system that processes data from t
 
 ## Features
 
-- Fetches weather data for **Delhi**, **Mumbai**, **Chennai**, **Bangalore**, **Kolkata**, and **Hyderabad**.
+- Fetches weather data
 - Processes and stores weather data every 5 minutes.
 - Generates daily weather summaries.
 - Implements an alerting system for user-configurable thresholds.

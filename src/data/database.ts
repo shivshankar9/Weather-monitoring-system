@@ -1,5 +1,5 @@
 import sqlite3 from 'sqlite3';
-import { WeatherRecord, DailySummary } from './models';
+import { WeatherRecord, DailySummary, AlertSummary } from './models';
 
 const db = new sqlite3.Database('./weather.db');
 
@@ -24,6 +24,16 @@ export function initDatabase(): Promise<void> {
         maxTemp REAL,
         minTemp REAL,
         dominantCondition TEXT
+      )`);
+
+      db.run(`CREATE TABLE IF NOT EXISTS alert_summaries (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        city TEXT,
+        alert TEXT,
+        date TEXT,
+        temperature REAL,
+        description TEXT,
+        timestamp INTEGER
       )`);
 
       resolve();
@@ -59,6 +69,20 @@ export function insertDailySummary(summary: DailySummary): Promise<void> {
   });
 }
 
+// export function insertAlertSummary(alert: AlertSummary): Promise<void> {
+//   return new Promise((resolve, reject) => {
+//     db.run(
+//       `INSERT INTO alert_summaries (city, alert, date, temperature, description, timestamp) 
+//        VALUES (?, ?, ?, ?, ?, ?)`,
+//       [alert.city, alert.alert, alert.date, alert.temperature, alert.description, alert.timestamp],
+//       (err) => {
+//         if (err) reject(err);
+//         else resolve();
+//       }
+//     );
+//   });
+// }
+
 export function getWeatherRecords(city: string, startTimestamp: number, endTimestamp: number): Promise<WeatherRecord[]> {
   return new Promise((resolve, reject) => {
     db.all(
@@ -86,3 +110,17 @@ export function getDailySummaries(city: string, startDate: string, endDate: stri
     );
   });
 }
+
+// export function getAlertSummaries(city: string, startDate: string, endDate: string): Promise<AlertSummary[]> {
+//   return new Promise((resolve, reject) => {
+//     db.all(
+//       `SELECT * FROM alert_summaries 
+//        WHERE city = ? AND date >= ? AND date <= ?`,
+//       [city, startDate, endDate],
+//       (err, rows) => {
+//         if (err) reject(err);
+//         else resolve(rows as AlertSummary[]);
+//       }
+//     );
+//   });
+// }

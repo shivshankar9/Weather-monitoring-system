@@ -13,11 +13,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.fetchWeatherData = fetchWeatherData;
+// src/api/openweathermap.ts
 const axios_1 = __importDefault(require("axios"));
 const config_1 = require("../config");
-const API_BASE_URL = 'http://api.openweathermap.org/data/2.5/weather';
+const API_BASE_URL = 'https://api.openweathermap.org/data/2.5/weather';
 function fetchWeatherData(city) {
     return __awaiter(this, void 0, void 0, function* () {
+        var _a, _b;
+        if (!config_1.config.openWeatherMapApiKey) {
+            throw new Error('OpenWeatherMap API key is not set in the configuration');
+        }
         try {
             const response = yield axios_1.default.get(API_BASE_URL, {
                 params: {
@@ -37,8 +42,20 @@ function fetchWeatherData(city) {
             };
         }
         catch (error) {
-            console.error(`Error fetching weather data for ${city}:`, error);
-            throw error;
+            if (axios_1.default.isAxiosError(error)) {
+                if (((_a = error.response) === null || _a === void 0 ? void 0 : _a.status) === 401) {
+                    throw new Error('Invalid API key. Please check your OpenWeatherMap API key.');
+                }
+                else if (((_b = error.response) === null || _b === void 0 ? void 0 : _b.status) === 404) {
+                    throw new Error(`City "${city}" not found.`);
+                }
+                else {
+                    throw new Error(`Error fetching weather data for ${city}: ${error.message}`);
+                }
+            }
+            else {
+                throw new Error(`Unexpected error fetching weather data for ${city}`);
+            }
         }
     });
 }

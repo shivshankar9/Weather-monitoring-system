@@ -1,9 +1,8 @@
+// src/api/openweathermap.ts
 import axios from 'axios';
-require('dotenv').config();
-
 import { config } from '../config';
 
-const API_BASE_URL = 'http://api.openweathermap.org/data/2.5/weather';
+const API_BASE_URL = 'https://api.openweathermap.org/data/2.5/weather';
 
 export interface WeatherData {
   city: string;
@@ -15,6 +14,10 @@ export interface WeatherData {
 }
 
 export async function fetchWeatherData(city: string): Promise<WeatherData> {
+  if (!config.openWeatherMapApiKey) {
+    throw new Error('OpenWeatherMap API key is not set in the configuration');
+  }
+
   try {
     const response = await axios.get(API_BASE_URL, {
       params: {
@@ -34,7 +37,16 @@ export async function fetchWeatherData(city: string): Promise<WeatherData> {
       timestamp: data.dt,
     };
   } catch (error) {
-    console.error(`Error fetching weather data for ${city}:`, error);
-    throw error;
+    if (axios.isAxiosError(error)) {
+      if (error.response?.status === 401) {
+        throw new Error('Invalid API key. Please check your OpenWeatherMap API key.');
+      } else if (error.response?.status === 404) {
+        throw new Error(`City "${city}" not found.`);
+      } else {
+        throw new Error(`Error fetching weather data for ${city}: ${error.message}`);
+      }
+    } else {
+      throw new Error(`Unexpected error fetching weather data for ${city}`);
+    }
   }
 }

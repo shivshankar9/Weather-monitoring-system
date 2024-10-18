@@ -20,4 +20,13 @@ export interface WeatherRecord {
     minTemp: number;
     dominantCondition: string;
   }
+  export interface AlertSummary {
+    id?: number;
+    city: string;
+    alert: string;
+    date: string;
+    temperature: number;
+    description: string;
+    timestamp: number;
+  }
   

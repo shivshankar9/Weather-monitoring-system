@@ -1,2 +1,33 @@
-/node_modules
-/tests
+# Node.js dependencies
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Environment variables
+.env
+
+# Compiled TypeScript
+dist/
+out/
+
+# Debugging and diagnostic files
+.vscode/
+*.swp
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Package lock files
+package-lock.json
+yarn.lock
+
+# Test outputs
+coverage/
+test-results/
+
+# Miscellaneous
+.idea/
